@@ -5,7 +5,7 @@ using StructureMap.Graph;
 
 namespace Foundation.Infrastructure.BL
 {
-    public class BusinessManagerRegisterationConventrion : IRegistrationConvention
+    public class BusinessManagerRegisterationConvention : IRegistrationConvention
     {
         public void Process(Type type, Registry registry)
         {

@@ -61,7 +61,7 @@
     <Compile Include="BL\TransactionInterceptor.cs" />
     <Compile Include="BL\BusinessManagerContainer.cs" />
     <Compile Include="BL\BusinessManagerInterceptor.cs" />
-    <Compile Include="BL\BusinessManagerRegisterationConventrion.cs" />
+    <Compile Include="BL\BusinessManagerRegisterationConvention.cs" />
     <Compile Include="BL\IBusinessManager.cs" />
     <Compile Include="BL\IBusinessManagerContainer.cs" />
     <Compile Include="BL\IBusinessManagerRegistery.cs" />

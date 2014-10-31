@@ -354,6 +354,7 @@
     <Content Include="Views\Reports\Partial\OverDueFilter.cshtml" />
     <Content Include="Views\Shared\_FormButtons.cshtml" />
     <Content Include="Views\Payment\Partial\PaymentFilter.cshtml" />
+    <Content Include="Views\Shared\_ViewButtons.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

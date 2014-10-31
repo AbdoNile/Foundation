@@ -20,7 +20,7 @@ namespace Foundation.Infrastructure.Configurations
                 }
                 
                 x.AssembliesFromPath(basePath);
-                x.With(new BusinessManagerRegisterationConventrion());
+                x.With(new BusinessManagerRegisterationConvention());
                 x.ConnectImplementationsToTypesClosing(typeof(BusinessManagerInterceptor<>));
             });
         }
