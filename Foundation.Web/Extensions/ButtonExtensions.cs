@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+﻿using System.Web.Mvc;
 
 namespace Foundation.Web.Extensions
 {
     public static class ButtonExtensions
     {
-        
-
-        public static MvcHtmlString ActionButton(this HtmlHelper helper, string text, string actionName, string controllerName, object routeValues = null, object htmlAttributes = null, string glyphIcons = null,  BootstrapNamedColor color = BootstrapNamedColor.Default)
+        public static MvcHtmlString ActionButton(this HtmlHelper helper, string text, string actionName,
+            string controllerName, object routeValues = null, object htmlAttributes = null, string glyphIcons = null,
+            BootstrapNamedColor color = BootstrapNamedColor.Default)
         {
             var builder = new TagBuilder("a");
             builder.SetInnerText(text);
@@ -53,28 +49,31 @@ namespace Foundation.Web.Extensions
             {
                 var glyphiconBuilder = new TagBuilder("span");
                 glyphiconBuilder.AddCssClass("pull-right glyphicon glyph" + glyphIcons);
-                builder.InnerHtml = glyphiconBuilder.ToString() + " " + builder.InnerHtml;
+                builder.InnerHtml = glyphiconBuilder + " " + builder.InnerHtml;
             }
 
             return MvcHtmlString.Create(builder.ToString());
         }
 
 
-        public static MvcHtmlString ButtonWithinGroup(this HtmlHelper helper, string text, string actionName, string controllerName, object routeValues = null, object htmlAttributes = null, string glyphIcons = null, BootstrapNamedColor color = BootstrapNamedColor.Default)
+        public static MvcHtmlString ButtonWithinGroup(this HtmlHelper helper, string text, string actionName,
+            string controllerName, object routeValues = null, object htmlAttributes = null, string glyphIcons = null,
+            BootstrapNamedColor color = BootstrapNamedColor.Default)
         {
             var builder = new TagBuilder("li");
-            var buttonHtml = helper.ActionButton(text, actionName, controllerName, routeValues, htmlAttributes, glyphIcons, color);
-            builder.InnerHtml =  buttonHtml.ToHtmlString();
+            MvcHtmlString buttonHtml = helper.ActionButton(text, actionName, controllerName, routeValues, htmlAttributes,
+                glyphIcons, color);
+            builder.InnerHtml = buttonHtml.ToHtmlString();
             return MvcHtmlString.Create(builder.ToString());
         }
 
-        public static MvcHtmlString Divider(this HtmlHelper helper, string text, string actionName, string controllerName, object routeValues = null, object htmlAttributes = null, string glyphIcons = null, BootstrapNamedColor color = BootstrapNamedColor.Default)
+        public static MvcHtmlString Divider(this HtmlHelper helper, string text, string actionName,
+            string controllerName, object routeValues = null, object htmlAttributes = null, string glyphIcons = null,
+            BootstrapNamedColor color = BootstrapNamedColor.Default)
         {
             var builder = new TagBuilder("li");
             builder.AddCssClass("divider");
             return MvcHtmlString.Create(builder.ToString());
         }
-
-       
     }
 }

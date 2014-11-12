@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.UI;
+using Foundation.Web.Configurations;
 using Foundation.Web.Extensions;
 
 namespace Foundation.Web.Paging
@@ -10,20 +11,20 @@ namespace Foundation.Web.Paging
     public static class PagerExtensions
     {
         public static MvcHtmlString PageLinks(
-            this HtmlHelper html, 
+            this HtmlHelper html,
             object queryObject,
             Func<object, string> urlActionDelegate,
             int linksToShow = 0)
         {
-            var  pagingInfoViewModel = queryObject as IPagingParameters;
+            var pagingInfoViewModel = queryObject as IPagingParameters;
             var result = new StringBuilder();
-            
+
             if (pagingInfoViewModel != null)
             {
-                var currentPage = pagingInfoViewModel.PageNumber + 1;
-                var totalPages = pagingInfoViewModel.TotalPages;
+                int currentPage = pagingInfoViewModel.PageNumber + 1;
+                int totalPages = pagingInfoViewModel.TotalPages;
                 linksToShow = (linksToShow == 0) ? totalPages : linksToShow;
-            
+
                 if (pagingInfoViewModel.TotalPages <= 1)
                 {
                     return MvcHtmlString.Create(string.Empty);
@@ -32,22 +33,26 @@ namespace Foundation.Web.Paging
 
                 var stringWriter = new StringWriter(result);
                 string linkBlock = string.Empty;
-                            
+
                 using (var textWriter = new NavHtmlTextWritter(stringWriter))
                 {
                     {
-                        textWriter.AddAttribute(HtmlTextWriterAttribute.Class, Configurations.WebConfigurations.PagingConfigurations.PaginationCssClass);
+                        textWriter.AddAttribute(HtmlTextWriterAttribute.Class,
+                            WebConfigurations.PagingConfigurations.PaginationCssClass);
                         textWriter.RenderBeginTag(HtmlTextWriterTag.Ul);
                         {
-
                             if (currentPage > 1)
                             {
                                 pagingInfoViewModel.PageNumber = 1;
-                                PageItem(textWriter, BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, Configurations.WebConfigurations.PagingConfigurations.FirstPageText));
+                                PageItem(textWriter,
+                                    BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject,
+                                        WebConfigurations.PagingConfigurations.FirstPageText));
 
 
                                 pagingInfoViewModel.PageNumber = currentPage - 1;
-                                PageItem(textWriter, BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, Configurations.WebConfigurations.PagingConfigurations.PreviousPageText));
+                                PageItem(textWriter,
+                                    BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject,
+                                        WebConfigurations.PagingConfigurations.PreviousPageText));
                             }
 
                             // create page links
@@ -60,13 +65,15 @@ namespace Foundation.Web.Paging
                                 pagingInfoViewModel.PageNumber = i;
                                 if (i == currentPage)
                                 {
-                                    PageItem(textWriter, BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, i.ToString()), Configurations.WebConfigurations.PagingConfigurations.ActivePageClass);
+                                    PageItem(textWriter,
+                                        BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, i.ToString()),
+                                        WebConfigurations.PagingConfigurations.ActivePageClass);
                                 }
                                 else
                                 {
-                                    PageItem(textWriter, BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, i.ToString()));
+                                    PageItem(textWriter,
+                                        BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, i.ToString()));
                                 }
-
                             }
 
 
@@ -74,10 +81,14 @@ namespace Foundation.Web.Paging
                             if (currentPage < totalPages)
                             {
                                 pagingInfoViewModel.PageNumber = currentPage + 1;
-                                PageItem(textWriter, BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, Configurations.WebConfigurations.PagingConfigurations.NextPageText));
+                                PageItem(textWriter,
+                                    BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject,
+                                        WebConfigurations.PagingConfigurations.NextPageText));
 
                                 pagingInfoViewModel.PageNumber = totalPages;
-                                PageItem(textWriter, BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, Configurations.WebConfigurations.PagingConfigurations.LastPageText));
+                                PageItem(textWriter,
+                                    BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject,
+                                        WebConfigurations.PagingConfigurations.LastPageText));
                             }
 
 
@@ -85,11 +96,8 @@ namespace Foundation.Web.Paging
                         }
                     }
                 }
-
-
             }
             return MvcHtmlString.Create(result.ToString());
-            
         }
 
         public static MvcHtmlString PageLinks(
@@ -100,13 +108,9 @@ namespace Foundation.Web.Paging
             var navigationParameters = queryObject as INavigationParameters;
             if (navigationParameters != null)
             {
-                return html.PageLinks(queryObject, urlActionDelegate: navigationParameters.ActionFunc,
-                    linksToShow: linksToShow);
+                return html.PageLinks(queryObject, navigationParameters.ActionFunc, linksToShow);
             }
-            else
-            {
-                throw new NullReferenceException("INavigationParameters");
-            }
+            throw new NullReferenceException("INavigationParameters");
         }
 
 
@@ -144,6 +148,5 @@ namespace Foundation.Web.Paging
             textWriter.Write(linkBlock);
             textWriter.RenderEndTag();
         }
-      
     }
 }

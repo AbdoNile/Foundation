@@ -4,15 +4,14 @@ using Foundation.Web.Paging;
 namespace Foundation.Web.ModelBinders
 {
     /// <summary>
-    /// initializing the pager.
+    ///     initializing the pager.
     /// </summary>
-   
     public class PagingAndSortingModelBinder : DefaultModelBinder
     {
         public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            var model = base.BindModel(controllerContext, bindingContext);
-            var pagedModel = (PagingAndSortingParameters)model;
+            object model = base.BindModel(controllerContext, bindingContext);
+            var pagedModel = (PagingAndSortingParameters) model;
 
             if (pagedModel == null)
             {

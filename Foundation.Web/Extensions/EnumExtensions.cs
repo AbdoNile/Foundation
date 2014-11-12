@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Web.Mvc;
 
 namespace Foundation.Web.Extensions
@@ -11,8 +10,9 @@ namespace Foundation.Web.Extensions
     public static class EnumExtensions
     {
         /// <summary>
-        /// Retrieve the descriptions on the enum type.
-        /// Then when you pass in the enum type (e.g. Enums.UserTitles), it will retrieve the descriptions for all the individual enums
+        ///     Retrieve the descriptions on the enum type.
+        ///     Then when you pass in the enum type (e.g. Enums.UserTitles), it will retrieve the descriptions for all the
+        ///     individual enums
         /// </summary>
         /// <param name="enumType">The Enumeration Type</param>
         /// <returns>A string list representing all the friendly names</returns>
@@ -26,11 +26,11 @@ namespace Foundation.Web.Extensions
             {
                 foreach (MemberInfo member in memInfo)
                 {
-                    object[] attrs = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                    object[] attrs = member.GetCustomAttributes(typeof (DescriptionAttribute), false);
 
                     if (attrs != null && attrs.Length > 0)
                     {
-                        result.Add(((DescriptionAttribute)attrs[0]).Description);
+                        result.Add(((DescriptionAttribute) attrs[0]).Description);
                     }
                     else
                     {
@@ -43,7 +43,7 @@ namespace Foundation.Web.Extensions
         }
 
         /// <summary>
-        /// Gets a list of SelectListItem with text as description of the enum and value as its name.
+        ///     Gets a list of SelectListItem with text as description of the enum and value as its name.
         /// </summary>
         /// <param name="type">The Enumeration Type</param>
         /// <returns>IEnumerable of SelectListItem</returns>
@@ -57,15 +57,19 @@ namespace Foundation.Web.Extensions
             {
                 foreach (MemberInfo member in memInfo)
                 {
-                    object[] attrs = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                    object[] attrs = member.GetCustomAttributes(typeof (DescriptionAttribute), false);
 
                     if (attrs != null && attrs.Length > 0)
                     {
-                        result.Add(new SelectListItem() { Text = ((DescriptionAttribute)attrs[0]).Description, Value = member.Name });
+                        result.Add(new SelectListItem
+                        {
+                            Text = ((DescriptionAttribute) attrs[0]).Description,
+                            Value = member.Name
+                        });
                     }
                     else
                     {
-                        result.Add(new SelectListItem() { Text = member.Name, Value = member.Name });
+                        result.Add(new SelectListItem {Text = member.Name, Value = member.Name});
                     }
                 }
             }
@@ -74,7 +78,7 @@ namespace Foundation.Web.Extensions
         }
 
         /// <summary>
-        /// Gets a description attribute of an enum by its value
+        ///     Gets a description attribute of an enum by its value
         /// </summary>
         /// <param name="value">Enum value</param>
         /// <returns>Description string</returns>
@@ -82,7 +86,7 @@ namespace Foundation.Web.Extensions
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
 
-            DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var attributes = (DescriptionAttribute[]) fi.GetCustomAttributes(typeof (DescriptionAttribute), false);
 
             if (attributes != null &&
                 attributes.Length > 0)

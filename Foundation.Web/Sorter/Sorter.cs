@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using System.Web.Compilation;
+using System.Reflection;
 using Foundation.Web.Paging;
-using NHibernate.Criterion;
-using Expression = System.Linq.Expressions.Expression;
 
 namespace Foundation.Web.Sorter
 {
@@ -19,17 +12,14 @@ namespace Foundation.Web.Sorter
         {
             return source.ApplyOrder(sortingInfo.Sort, sortingInfo.SortDirection);
         }
-        
+
         public static IQueryable<T> ApplyOrder<T>(this IQueryable<T> source, string columnName, string direction = "asc")
         {
             if (string.IsNullOrEmpty(columnName))
             {
                 return source;
             }
-            else
-            {
-                return source.ApplyMethod(columnName, direction.ToLower().Contains("asc") ? "OrderBy" : "OrderByDescending");    
-            }
+            return source.ApplyMethod(columnName, direction.ToLower().Contains("asc") ? "OrderBy" : "OrderByDescending");
         }
 
         internal static IQueryable<T> ApplyMethod<T>(this IQueryable<T> source, string property, string methodName)
@@ -58,6 +48,5 @@ namespace Foundation.Web.Sorter
                 .Invoke(null, new object[] {source, lambda});
             return (IOrderedQueryable<T>) result;
         }
-
     }
 }

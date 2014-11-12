@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using Foundation.Web.Extensions;
@@ -23,12 +24,12 @@ namespace Foundation.Web.Paging
                     }
                     else
                     {
-                        var propertyInfo = model.GetType()
-                                                .GetProperties()
-                                                .FirstOrDefault(
-                                                    x =>
-                                                    x.PropertyType.GetInterfaces()
-                                                     .Contains(typeof (INavigationParameters)));
+                        PropertyInfo propertyInfo = model.GetType()
+                            .GetProperties()
+                            .FirstOrDefault(
+                                x =>
+                                    x.PropertyType.GetInterfaces()
+                                        .Contains(typeof (INavigationParameters)));
 
                         if (propertyInfo != null)
                         {
@@ -39,16 +40,17 @@ namespace Foundation.Web.Paging
                         {
                             if (propertyInfo != null)
                             {
-                                pagingModel = (INavigationParameters) Activator.CreateInstance(propertyInfo.PropertyType);
+                                pagingModel =
+                                    (INavigationParameters) Activator.CreateInstance(propertyInfo.PropertyType);
                                 propertyInfo.SetValue(model, pagingModel);
                             }
                         }
                     }
-                    
-                    var pagedModel = pagingModel;
 
-                    var controllerName = filterContext.RouteData.Values["controller"].ToString();
-                    var actionName = filterContext.RouteData.Values["action"].ToString();
+                    INavigationParameters pagedModel = pagingModel;
+
+                    string controllerName = filterContext.RouteData.Values["controller"].ToString();
+                    string actionName = filterContext.RouteData.Values["action"].ToString();
                     var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
 
                     Func<object, string> actionFunction = x => urlHelper.Action(actionName, controllerName, x, true);

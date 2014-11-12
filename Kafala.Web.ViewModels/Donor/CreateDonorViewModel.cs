@@ -20,6 +20,8 @@ namespace Kafala.Web.ViewModels.Donor
         public string Name { get; set; }
 
         [EditControl(ElementType = ElementType.Text)]
+        [AppendedHtml(Name = "ng-test", Value = "sldklskd")]
+        [AppendedHtml(Name = "ng-test2", Value = "sldklskddf")]
         [Display(GroupName = "Contact Info", Order = 2, Name = "Email", Prompt = "Enter email address")]
         [Required(ErrorMessage = "Please enter a valid email")]
         public string Email { get; set; }

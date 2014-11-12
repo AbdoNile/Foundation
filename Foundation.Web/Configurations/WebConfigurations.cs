@@ -4,8 +4,6 @@ namespace Foundation.Web.Configurations
 {
     public static class WebConfigurations
     {
-        public static PagingConfigurations PagingConfigurations { get; set; }
-
         static WebConfigurations()
         {
             PagingConfigurations = new PagingConfigurations
@@ -23,9 +21,10 @@ namespace Foundation.Web.Configurations
             };
 
             HasErrorsCssClass = "has-error";
-
         }
 
-       public static string HasErrorsCssClass { get; set; }
+        public static PagingConfigurations PagingConfigurations { get; set; }
+
+        public static string HasErrorsCssClass { get; set; }
     }
 }

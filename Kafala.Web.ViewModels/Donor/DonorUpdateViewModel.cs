@@ -14,7 +14,7 @@ namespace Kafala.Web.ViewModels.Donor
         [EditControl(ElementType = ElementType.Hidden)]
         public Guid Id { get; set; }
 
-        [EditControl( ElementType = ElementType.Text)]
+        [EditControl( ElementType = ElementType.Text, HtmlAttributes = "{ng_add:test}")]
         [Display(Order = 1, Name = "Donor Name", Prompt = "The full donor name")]
         [Required]
         public string Name { get; set; }

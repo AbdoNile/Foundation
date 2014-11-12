@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Foundation.Configuration;
 using Foundation.Infrastructure.Notifications;
-using Foundation.Infrastructure.Query;
 using StructureMap;
 
 namespace Foundation.Web.Configurations
@@ -32,9 +31,9 @@ namespace Foundation.Web.Configurations
 
             if (controllerBase != null && controllerBase.ControllerContext != null)
             {
-                var httpContextBase = controllerBase.ControllerContext.HttpContext;
+                HttpContextBase httpContextBase = controllerBase.ControllerContext.HttpContext;
 
-                var nestedContainer = (IContainer)httpContextBase.Items[NestedContainerKey];
+                var nestedContainer = (IContainer) httpContextBase.Items[NestedContainerKey];
 
                 if (nestedContainer != null)
                 {
@@ -47,7 +46,7 @@ namespace Foundation.Web.Configurations
 
         public override IController CreateController(RequestContext requestContext, string controllerName)
         {
-            var nestedContainer = this.container.GetNestedContainer();
+            IContainer nestedContainer = container.GetNestedContainer();
             requestContext.HttpContext.Items[NestedContainerKey] = nestedContainer;
 
             ControllerBase controllerBase = null;
@@ -63,26 +62,25 @@ namespace Foundation.Web.Configurations
                     .HybridHttpOrThreadLocalScoped()
                     .Use(x =>
                     {
-                        var controllerContext = x.GetInstance<Func<ControllerContext>>()();
-                        var currentController = controllerContext.Controller;
-                        var tempData = currentController.TempData;
+                        ControllerContext controllerContext = x.GetInstance<Func<ControllerContext>>()();
+                        ControllerBase currentController = controllerContext.Controller;
+                        TempDataDictionary tempData = currentController.TempData;
                         var resourceLocator = nestedContainer.GetInstance<IResourcesLocator>();
                         var flashMessenger = new WebFlashMessenger(resourceLocator);
                         tempData["FlashMessenger"] = flashMessenger;
                         return flashMessenger;
                     });
-
-                
             });
 
             var controller = nestedContainer.TryGetInstance<IController>(controllerName);
             controllerBase = controller as ControllerBase;
-            
+
             if (controller == null)
             {
                 throw new HttpException(
-                    (int)HttpStatusCode.NotFound,
-                    string.Format(CultureInfo.CurrentUICulture, "No controller found for {0} at path {1}.", new object[] { controllerName, requestContext.HttpContext.Request.Path }));
+                    (int) HttpStatusCode.NotFound,
+                    string.Format(CultureInfo.CurrentUICulture, "No controller found for {0} at path {1}.",
+                        new object[] {controllerName, requestContext.HttpContext.Request.Path}));
             }
 
             return controller;

@@ -65,7 +65,17 @@ namespace Foundation.FormBuilder.DynamicForm
             formElement.ControlSpecs.ClientId = formElement.ControlSpecs.ClientId ?? formElement.PropertyInfo.Name;
             formElement.MappedDataType = formElement.PropertyInfo.PropertyType;
 
+            var appendedHtmlAttributes = formElement.PropertyInfo.GetCustomAttributes(typeof(AppendedHtmlAttribute), false).Cast<AppendedHtmlAttribute>().ToList();
 
+            if (appendedHtmlAttributes.Count >= 0)
+            {
+                formElement.AppendedHtmlAttributes = new Dictionary<string, object>();
+                foreach (var attribute in appendedHtmlAttributes)
+                {
+                    formElement.AppendedHtmlAttributes.Add(attribute.Name, attribute.Value);
+                }
+            }
+            
             ModelState modelState;
             if (htmlHelper.ViewData.ModelState.TryGetValue(formElement.ControlSpecs.ControlName, out modelState) && modelState.Errors.Count > 0)
             {
@@ -117,5 +127,7 @@ namespace Foundation.FormBuilder.DynamicForm
             var attributes = htmlHelper.GetUnobtrusiveValidationAttributes(propertyExpression, metadata);
             return attributes;
         }
+
+
     }
 }

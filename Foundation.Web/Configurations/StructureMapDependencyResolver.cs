@@ -17,12 +17,12 @@ namespace Foundation.Web.Configurations
 
         public object GetService(Type serviceType)
         {
-            object instance = this.container.TryGetInstance(serviceType);
+            object instance = container.TryGetInstance(serviceType);
 
             if (instance == null && !serviceType.IsAbstract)
             {
-                this.container.Configure(c => c.AddType(serviceType, serviceType));
-                instance = this.container.TryGetInstance(serviceType);
+                container.Configure(c => c.AddType(serviceType, serviceType));
+                instance = container.TryGetInstance(serviceType);
             }
 
             return instance;
@@ -30,7 +30,7 @@ namespace Foundation.Web.Configurations
 
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            return this.container.GetAllInstances(serviceType).Cast<object>();
+            return container.GetAllInstances(serviceType).Cast<object>();
         }
     }
 }

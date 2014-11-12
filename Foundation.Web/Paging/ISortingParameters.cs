@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Foundation.Web.Paging
+﻿namespace Foundation.Web.Paging
 {
     public interface ISortingParameters : INavigationParameters
     {

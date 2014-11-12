@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Web.Mvc;
@@ -21,7 +21,7 @@ namespace Foundation.Web.Extensions
         private static readonly ResourceManager HelpMessagesResourceManager;
         private static readonly string DefaultPageTitle;
 
-        private static IResourcesLocator resourcesLocator = ObjectFactory.GetInstance<IResourcesLocator>();
+        private static readonly IResourcesLocator resourcesLocator = ObjectFactory.GetInstance<IResourcesLocator>();
 
         static HtmlExtensions()
         {
@@ -43,45 +43,51 @@ namespace Foundation.Web.Extensions
             {
                 return new MvcHtmlString(flashMessenger.RenderFlashMessages());
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
-        public static MvcHtmlString CssInclude(this HtmlHelper htmlHelper, string filename, CssMediaType mediaType = CssMediaType.All)
+        public static MvcHtmlString CssInclude(this HtmlHelper htmlHelper, string filename,
+            CssMediaType mediaType = CssMediaType.All)
         {
             var helper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            var filepath = filename.StartsWith("~") ? filename : "~/content/css/" + filename;
-            var url = helper.Content(filepath);
+            string filepath = filename.StartsWith("~") ? filename : "~/content/css/" + filename;
+            string url = helper.Content(filepath);
 
-            return MvcHtmlString.Create(string.Format("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" media=\"{1}\" />", url.ToLower(), mediaType.ToString().ToLower()));
+            return
+                MvcHtmlString.Create(
+                    string.Format("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" media=\"{1}\" />",
+                        url.ToLower(), mediaType.ToString().ToLower()));
         }
 
         public static MvcHtmlString ScriptInclude(this HtmlHelper htmlHelper, string filename)
         {
-            var filepath = "~/Scripts/";
+            string filepath = "~/Scripts/";
             filepath += htmlHelper.ViewContext.HttpContext.IsDebuggingEnabled ? "Debug" : "Release";
             filepath += "/" + filename;
 
             var helper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            var url = helper.Content(filepath);
+            string url = helper.Content(filepath);
 
-            return MvcHtmlString.Create(string.Format("<script type=\"text/javascript\" src=\"{0}\"></script>", url.ToLower()));
+            return
+                MvcHtmlString.Create(string.Format("<script type=\"text/javascript\" src=\"{0}\"></script>",
+                    url.ToLower()));
         }
 
         public static MvcHtmlString ScriptIncludeThirdParty(this HtmlHelper htmlHelper, string filename)
         {
             // read a subfolder from config, or empty
-            var thirdPartyScriptsFolder = ConfigurationManager.AppSettings["Foundation_ThirdPartyScripts"] ?? string.Empty;
-            var filepath = "~/Scripts/";
+            string thirdPartyScriptsFolder = ConfigurationManager.AppSettings["Foundation_ThirdPartyScripts"] ??
+                                             string.Empty;
+            string filepath = "~/Scripts/";
             // filepath += htmlHelper.ViewContext.HttpContext.IsDebuggingEnabled ? "Debug" : "Release" + "/";
             filepath += thirdPartyScriptsFolder + filename;
 
             var helper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            var url = helper.Content(filepath);
+            string url = helper.Content(filepath);
 
-            return MvcHtmlString.Create(string.Format("<script type=\"text/javascript\" src=\"{0}\"></script>", url.ToLower()));
+            return
+                MvcHtmlString.Create(string.Format("<script type=\"text/javascript\" src=\"{0}\"></script>",
+                    url.ToLower()));
         }
 
         public static MvcHtmlString Image(
@@ -101,9 +107,9 @@ namespace Foundation.Web.Extensions
             string title = null,
             string @class = null)
         {
-            var filepath = "~/Content/Images/" + filename;
+            string filepath = "~/Content/Images/" + filename;
             var helper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            var url = helper.Content(filepath);
+            string url = helper.Content(filepath);
 
             var tagBuilder = new TagBuilder("img");
             tagBuilder.Attributes.Add("src", url.ToLower());
@@ -131,11 +137,13 @@ namespace Foundation.Web.Extensions
             return test ? text : string.Empty;
         }
 
-        public static MvcHtmlString ModalConfirmDialogContainer(this HtmlHelper htmlHelper, string message, string dialogId)
+        public static MvcHtmlString ModalConfirmDialogContainer(this HtmlHelper htmlHelper, string message,
+            string dialogId)
         {
             var sb = new StringBuilder();
             sb.AppendLine("<div style='display:none'>");
-            sb.AppendLine("<div id='" + dialogId + "' style='padding:10px; background:#fff;'><div style='margin-top:30px'>");
+            sb.AppendLine("<div id='" + dialogId +
+                          "' style='padding:10px; background:#fff;'><div style='margin-top:30px'>");
             sb.AppendLine("<span class='confirmationMessage'>" + message + "</span>");
             sb.AppendLine("<div class='controls'>");
             sb.AppendLine("<button class='blue' id='yesBtn'>Yes</button>");
@@ -145,11 +153,13 @@ namespace Foundation.Web.Extensions
             return new MvcHtmlString(sb.ToString());
         }
 
-        public static MvcHtmlString ModalInformationDialogContainer(this HtmlHelper htmlHelper, string message, string dialogId)
+        public static MvcHtmlString ModalInformationDialogContainer(this HtmlHelper htmlHelper, string message,
+            string dialogId)
         {
             var sb = new StringBuilder();
             sb.AppendLine("<div style='display:none'>");
-            sb.AppendLine("<div id='" + dialogId + "' style='padding:10px; background:#fff;'><div style='margin-top:30px'>");
+            sb.AppendLine("<div id='" + dialogId +
+                          "' style='padding:10px; background:#fff;'><div style='margin-top:30px'>");
             sb.AppendLine("<span class='confirmationMessage'>" + message + "</span>");
             sb.AppendLine("<div class='controls'>");
             sb.AppendLine("<button class='blue' id='okBtn'>Ok</button>");
@@ -160,7 +170,7 @@ namespace Foundation.Web.Extensions
 
         public static MvcPanel BeginPanel(this HtmlHelper htmlHelper, string title, string blockClass = "purple")
         {
-            var writer = htmlHelper.ViewContext.Writer;
+            TextWriter writer = htmlHelper.ViewContext.Writer;
             writer.WriteLine("<div class=\"block " + blockClass + "\">");
             if (!string.IsNullOrWhiteSpace(title))
             {
@@ -171,14 +181,14 @@ namespace Foundation.Web.Extensions
             return new MvcPanel(htmlHelper);
         }
 
-        
+
         public static MvcPanel BeginTabbedPanel(this HtmlHelper htmlHelper, IEnumerable<MvcPanelTab> tabs)
         {
-            var writer = htmlHelper.ViewContext.Writer;
+            TextWriter writer = htmlHelper.ViewContext.Writer;
             writer.WriteLine("<div id=\"tabs\">");
             writer.WriteLine("<ul>");
 
-            foreach (var tab in tabs)
+            foreach (MvcPanelTab tab in tabs)
             {
                 writer.WriteLine("<li class=\"" + (tab.IsActive ? " active" : string.Empty) + "\">");
                 writer.WriteLine(htmlHelper.ActionLink(tab.Text, tab.Action, tab.RouteValues));
@@ -203,27 +213,25 @@ namespace Foundation.Web.Extensions
 
         public static MvcHtmlString PageTitle(this HtmlHelper htmlHelper)
         {
-            var model = htmlHelper.ViewContext.ViewData.Model;
+            object model = htmlHelper.ViewContext.ViewData.Model;
             string title = null;
 
             if (model != null)
             {
-                var modelType = model.GetType();
-                var @namespace = modelType.Namespace ?? string.Empty;
+                Type modelType = model.GetType();
+                string @namespace = modelType.Namespace ?? string.Empty;
                 @namespace = @namespace.Substring(@namespace.LastIndexOf('.') + 1);
-                var pageName = @namespace + "_" + modelType.Name.Replace("ViewModel", string.Empty);
+                string pageName = @namespace + "_" + modelType.Name.Replace("ViewModel", string.Empty);
 
                 if (WebPageTitlesResourceManager != null)
                 {
                     title = WebPageTitlesResourceManager.GetString(pageName);
                 }
-
             }
 
             return MvcHtmlString.Create(title ?? DefaultPageTitle);
         }
 
-     
 
         public static MvcHtmlString YesNo(this HtmlHelper htmlHelper, bool? value)
         {
@@ -245,33 +253,30 @@ namespace Foundation.Web.Extensions
         {
             if (HelpMessagesResourceManager != null)
             {
-                var helpText = HelpMessagesResourceManager.GetString(text);
+                string helpText = HelpMessagesResourceManager.GetString(text);
 
-                return string.IsNullOrWhiteSpace(helpText) ? MvcHtmlString.Empty : htmlHelper.Image("help-icon.gif", "help", helpText, "helpText");
+                return string.IsNullOrWhiteSpace(helpText)
+                    ? MvcHtmlString.Empty
+                    : htmlHelper.Image("help-icon.gif", "help", helpText, "helpText");
             }
-            else
-            {
-                return MvcHtmlString.Empty;
-            }
+            return MvcHtmlString.Empty;
         }
 
         public static string HelpTextHtml(this HtmlHelper htmlHelper, string text)
         {
             if (HelpMessagesResourceManager != null)
             {
-                var helpText = HelpMessagesResourceManager.GetString(text);
+                string helpText = HelpMessagesResourceManager.GetString(text);
 
                 return string.IsNullOrWhiteSpace(helpText) ? string.Empty : HelpMessagesResourceManager.GetString(text);
             }
-            else
-            {
-                return String.Empty;
-            } 
+            return String.Empty;
         }
 
-        public static MvcHtmlString HelpTextFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        public static MvcHtmlString HelpTextFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TProperty>> expression)
         {
-            var propertyName = ExpressionHelper.GetExpressionText(expression);
+            string propertyName = ExpressionHelper.GetExpressionText(expression);
 
             return htmlHelper.HelpText(propertyName);
         }
@@ -294,17 +299,17 @@ namespace Foundation.Web.Extensions
 
             if (value != null)
             {
-                if (value.GetType() == typeof(decimal))
+                if (value.GetType() == typeof (decimal))
                 {
-                    result = Math.Round((decimal)value, decimalPlaces, MidpointRounding.AwayFromZero).ToString();
+                    result = Math.Round((decimal) value, decimalPlaces, MidpointRounding.AwayFromZero).ToString();
                 }
-                else if (value.GetType() == typeof(double))
+                else if (value.GetType() == typeof (double))
                 {
-                    result = Math.Round((double)value, decimalPlaces, MidpointRounding.AwayFromZero).ToString();
+                    result = Math.Round((double) value, decimalPlaces, MidpointRounding.AwayFromZero).ToString();
                 }
-                else if (value.GetType() == typeof(float))
+                else if (value.GetType() == typeof (float))
                 {
-                    result = Math.Round((float)value, decimalPlaces, MidpointRounding.AwayFromZero).ToString();
+                    result = Math.Round((float) value, decimalPlaces, MidpointRounding.AwayFromZero).ToString();
                 }
                 else
                 {
@@ -370,7 +375,7 @@ namespace Foundation.Web.Extensions
         }
 
         /// <summary>
-        /// Multi drop down control
+        ///     Multi drop down control
         /// </summary>
         /// <param name="h">htmlHelper auxillary object.</param>
         /// <param name="name">Name and Id for the drop down control.</param>
@@ -394,13 +399,13 @@ namespace Foundation.Web.Extensions
             var firstRow = new TagBuilder("tr");
             var firstCell = new TagBuilder("td");
             firstCell.MergeAttribute("style", "text-align: left !important");
-            
+
             var secondCell = new TagBuilder("td");
             secondCell.MergeAttribute("style", "text-align: left !important");
-            
+
             var select = new TagBuilder("select");
 
-            var options = string.Empty;
+            string options = string.Empty;
             TagBuilder option;
             IDictionary<string, object> attributes = new RouteValueDictionary(htmlAttributes);
             foreach (var attr in attributes)
@@ -411,8 +416,8 @@ namespace Foundation.Web.Extensions
             if (selectedItems != null)
             {
                 items = from it in items
-                        where !selectedItems.Any(sit => sit.Value == it.Value)
-                        select it;
+                    where !selectedItems.Any(sit => sit.Value == it.Value)
+                    select it;
             }
 
             option = new TagBuilder("option");
@@ -420,10 +425,10 @@ namespace Foundation.Web.Extensions
             option.SetInnerText(string.Empty);
             options += option.ToString(TagRenderMode.Normal) + "\n";
 
-            foreach (var item in items)
+            foreach (SelectListItem item in items)
             {
                 option = new TagBuilder("option");
-                option.MergeAttribute("value", item.Value.ToString());
+                option.MergeAttribute("value", item.Value);
                 option.SetInnerText(item.Text);
                 options += option.ToString(TagRenderMode.Normal) + "\n";
             }
@@ -454,28 +459,29 @@ namespace Foundation.Web.Extensions
             addButton.MergeAttribute("height", "16");
             addButton.MergeAttribute("title", "Add");
 
-            var selectedRows = string.Empty;
+            string selectedRows = string.Empty;
             if (selectedItems != null)
             {
-                foreach (var item in selectedItems)
+                foreach (SelectListItem item in selectedItems)
                 {
                     var row = new TagBuilder("tr");
                     var cell1 = new TagBuilder("td");
                     cell1.MergeAttribute("style", "text-align: left !important");
                     var cell2 = new TagBuilder("td");
                     cell2.MergeAttribute("style", "text-align: left !important");
-                    
+
                     var hiddenInput = new TagBuilder("input");
                     hiddenInput.MergeAttribute("class", "hiddenValue");
                     hiddenInput.MergeAttribute("type", "hidden");
                     hiddenInput.MergeAttribute("name", name + "_Guid");
-                    hiddenInput.MergeAttribute("value", item.Value.ToString());
+                    hiddenInput.MergeAttribute("value", item.Value);
 
                     var textLabel = new TagBuilder("label");
                     textLabel.InnerHtml = item.Text;
                     cell1.InnerHtml = textLabel.ToString(TagRenderMode.Normal);
                     cell1.InnerHtml += hiddenInput.ToString(TagRenderMode.Normal);
-                    cell2.InnerHtml = deleteButton.ToString(TagRenderMode.Normal) + "<span class=\"removelink\"> Remove </span> \n";
+                    cell2.InnerHtml = deleteButton.ToString(TagRenderMode.Normal) +
+                                      "<span class=\"removelink\"> Remove </span> \n";
                     cell2.Attributes.Add("width", "60px");
                     row.InnerHtml = cell1.ToString(TagRenderMode.Normal) + "\n";
                     row.InnerHtml += cell2.ToString(TagRenderMode.Normal) + "\n";
@@ -491,10 +497,10 @@ namespace Foundation.Web.Extensions
             var lastRow = new TagBuilder("tr");
             var lastCell1 = new TagBuilder("td");
             lastCell1.MergeAttribute("style", "text-align: left !important");
-            
+
             var lastCell2 = new TagBuilder("td");
             lastCell2.MergeAttribute("style", "text-align: left !important");
-            
+
             var otherInput = new TagBuilder("input");
             otherInput.MergeAttribute("class", "otherValue");
             otherInput.MergeAttribute("type", "text");
@@ -509,10 +515,10 @@ namespace Foundation.Web.Extensions
                 otherRow.MergeAttribute("class", "externalValue");
                 var otherCell1 = new TagBuilder("td");
                 otherCell1.MergeAttribute("style", "text-align: left !important");
-            
+
                 var otherCell2 = new TagBuilder("td");
                 otherCell2.MergeAttribute("style", "text-align: left !important");
-            
+
                 var otherLabel = new TagBuilder("label");
                 otherLabel.InnerHtml = otherOption;
                 otherCell1.InnerHtml = otherLabel.ToString(TagRenderMode.Normal);
@@ -532,7 +538,7 @@ namespace Foundation.Web.Extensions
 
             if (hasOther)
             {
-                var otherMessage = new TagBuilder("label") { InnerHtml = "Please give the details below" };
+                var otherMessage = new TagBuilder("label") {InnerHtml = "Please give the details below"};
                 lastCell1.InnerHtml = otherMessage.ToString(TagRenderMode.Normal) + "<br/>\n";
                 lastCell1.InnerHtml += otherInput.ToString(TagRenderMode.Normal) + "\n";
 
@@ -554,7 +560,7 @@ namespace Foundation.Web.Extensions
         }
 
         /// <summary>
-        /// Single drop down control
+        ///     Single drop down control
         /// </summary>
         /// <param name="h">htmlHelper auxillary object.</param>
         /// <param name="name">Name and Id for the drop down control.</param>
@@ -565,13 +571,13 @@ namespace Foundation.Web.Extensions
         /// <param name="textBoxHtmlAttributes">Optional, additional html attributes for the textbox.</param>
         /// <returns>The html string with the control.</returns>
         public static MvcHtmlString SingleDropDown(
-             this HtmlHelper h,
-             string name,
-             IEnumerable<SelectListItem> items,
-             Guid? selectedItem,
-             string otherOption,
-             object htmlAttributes = null,
-             object textBoxHtmlAttributes = null)
+            this HtmlHelper h,
+            string name,
+            IEnumerable<SelectListItem> items,
+            Guid? selectedItem,
+            string otherOption,
+            object htmlAttributes = null,
+            object textBoxHtmlAttributes = null)
         {
             var container = new TagBuilder("table");
             container.MergeAttribute("class", "singleSelectContainer");
@@ -582,7 +588,7 @@ namespace Foundation.Web.Extensions
 
             var select = new TagBuilder("select");
 
-            var options = string.Empty;
+            string options = string.Empty;
             TagBuilder option;
             IDictionary<string, object> attributes = new RouteValueDictionary(htmlAttributes);
             foreach (var attr in attributes)
@@ -595,11 +601,12 @@ namespace Foundation.Web.Extensions
             option.SetInnerText(string.Empty);
             options += option.ToString(TagRenderMode.Normal) + "\n";
 
-            foreach (var item in items)
+            foreach (SelectListItem item in items)
             {
                 option = new TagBuilder("option");
-                option.MergeAttribute("value", item.Value.ToString());
-                if (selectedItem.HasValue && selectedItem.Value.ToString() == item.Value && string.IsNullOrEmpty(otherOption))
+                option.MergeAttribute("value", item.Value);
+                if (selectedItem.HasValue && selectedItem.Value.ToString() == item.Value &&
+                    string.IsNullOrEmpty(otherOption))
                 {
                     option.MergeAttribute("selected", "selected");
                 }
@@ -641,10 +648,10 @@ namespace Foundation.Web.Extensions
             var lastRow = new TagBuilder("tr");
             var lastCell1 = new TagBuilder("td");
             lastCell1.MergeAttribute("style", "text-align: left !important");
-            
+
             var lastCell2 = new TagBuilder("td");
             lastCell2.MergeAttribute("style", "text-align: left !important");
-            
+
             var otherInput = new TagBuilder("input");
 
             IDictionary<string, object> txtBoxattributes = new RouteValueDictionary(textBoxHtmlAttributes);
@@ -665,11 +672,12 @@ namespace Foundation.Web.Extensions
                 otherInput.MergeAttribute("value", otherOption);
             }
 
-            var otherMessage = new TagBuilder("label") { InnerHtml = "Please give the details below" };
+            var otherMessage = new TagBuilder("label") {InnerHtml = "Please give the details below"};
             lastCell1.InnerHtml = otherMessage.ToString(TagRenderMode.Normal) + "<br/>\n";
 
             lastCell1.InnerHtml += otherInput.ToString(TagRenderMode.Normal) + "\n";
-            lastCell2.InnerHtml = cancelButton.ToString(TagRenderMode.Normal) + "<span class=\"removelink\"> Remove </span> \n";
+            lastCell2.InnerHtml = cancelButton.ToString(TagRenderMode.Normal) +
+                                  "<span class=\"removelink\"> Remove </span> \n";
             lastRow.InnerHtml = lastCell1.ToString(TagRenderMode.Normal) + "\n";
             lastRow.InnerHtml += lastCell2.ToString(TagRenderMode.Normal) + "\n";
 
@@ -678,8 +686,5 @@ namespace Foundation.Web.Extensions
 
             return MvcHtmlString.Create(container.ToString(TagRenderMode.Normal));
         }
-
-        
-        
     }
 }

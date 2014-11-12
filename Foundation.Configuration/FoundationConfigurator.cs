@@ -4,21 +4,21 @@
     {
         public FoundationConfigurator()
         {
-            this.Business = new BusinessConfigurations();
+            Business = new BusinessConfigurations();
 
-            this.Persistence = new PersistenceConfigurations();
+            Persistence = new PersistenceConfigurations();
 
-            this.Mongo = new MongoConfigurations();
+            Mongo = new MongoConfigurations();
 
-            this.Web = new WebConfigurations();
+            Web = new WebConfigurations();
 
-            this.UseBuseinssManagers = true;
-            this.UseEmailing = false;
-            this.UsePresistence = false;
-            this.UseQueryContainer = true;
-            this.UseSecurity = true;
-            this.UseWeb = true;
-            this.UseMongo = false;
+            UseBuseinssManagers = true;
+            UseEmailing = false;
+            UsePresistence = false;
+            UseQueryContainer = true;
+            UseSecurity = true;
+            UseWeb = true;
+            UseMongo = false;
         }
 
         public WebConfigurations Web { get; set; }
@@ -27,15 +27,15 @@
         public MongoConfigurations Mongo { get; set; }
 
         public bool UsePresistence { get; set; }
-        
+
         public bool UseQueryContainer { get; set; }
-        
+
         public bool UseBuseinssManagers { get; set; }
-        
+
         public bool UseWeb { get; set; }
-        
+
         public bool UseSecurity { get; set; }
-        
+
         public bool UseEmailing { get; set; }
         public bool UseMongo { get; set; }
     }

@@ -4,14 +4,14 @@
     {
         public MvcPanelTab(string text, string action, bool isActive = false, object routeValues = null)
         {
-            this.Text = text;
-            this.Action = action;
-            this.IsActive = isActive;
-            this.RouteValues = routeValues;
+            Text = text;
+            Action = action;
+            IsActive = isActive;
+            RouteValues = routeValues;
         }
 
         public string Text { get; private set; }
-        
+
         public string Action { get; private set; }
 
         public object RouteValues { get; private set; }

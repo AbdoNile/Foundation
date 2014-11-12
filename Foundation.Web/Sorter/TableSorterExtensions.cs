@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Foundation.Web.Configurations;
 using Foundation.Web.Extensions;
 using Foundation.Web.Paging;
 
@@ -9,7 +10,8 @@ namespace Foundation.Web.Sorter
 {
     public static class TableSorterExtensions
     {
-        public static MvcHtmlString SortableHeader(this HtmlHelper row, string currentSort, string currentDirection, string columnId, string title, Func<object, string> actionFunc, object htmlAttributes = null)
+        public static MvcHtmlString SortableHeader(this HtmlHelper row, string currentSort, string currentDirection,
+            string columnId, string title, Func<object, string> actionFunc, object htmlAttributes = null)
         {
             var sortingInfo = new SortingParameters();
             sortingInfo.ActionFunc = actionFunc;
@@ -18,42 +20,43 @@ namespace Foundation.Web.Sorter
             return row.SortableHeader(sortingInfo, columnId, title, htmlAttributes);
         }
 
-        public static MvcHtmlString SortableHeader(this HtmlHelper row, object queryObject, string columnId, string title, object htmlAttributes = null)
+        public static MvcHtmlString SortableHeader(this HtmlHelper row, object queryObject, string columnId,
+            string title, object htmlAttributes = null)
         {
-            var properties = string.Empty;
+            string properties = string.Empty;
             IDictionary<string, object> attributes = new RouteValueDictionary(htmlAttributes);
 
-            var sortingInfo = queryObject as ISortingParameters ?? new SortingParameters();
+            ISortingParameters sortingInfo = queryObject as ISortingParameters ?? new SortingParameters();
 
-            var currentSort = sortingInfo.Sort;
-            var currentDirection = sortingInfo.SortDirection;
-            var urlActionDelegate = sortingInfo.ActionFunc;
-            
+            string currentSort = sortingInfo.Sort;
+            string currentDirection = sortingInfo.SortDirection;
+            Func<object, string> urlActionDelegate = sortingInfo.ActionFunc;
+
             const string direction = "asc";
-            var newSortDirection = direction;
+            string newSortDirection = direction;
             foreach (var attr in attributes)
             {
-                properties += " " + attr.Key + "=\"" + attr.Value.ToString() + "\" ";
+                properties += " " + attr.Key + "=\"" + attr.Value + "\" ";
             }
 
-            string sortableHeaderCssClass = Configurations.WebConfigurations.PagingConfigurations.SortableHeaderCssClass;
+            string sortableHeaderCssClass = WebConfigurations.PagingConfigurations.SortableHeaderCssClass;
             string sortableHeader = sortableHeaderCssClass;
-            var cssClass = sortableHeader;
-            var sortIcon = "";
+            string cssClass = sortableHeader;
+            string sortIcon = "";
 
             if (!string.IsNullOrEmpty(currentSort) && currentSort == columnId)
             {
-                var sorted = Configurations.WebConfigurations.PagingConfigurations.SortedHeaderCssClass;
+                string sorted = WebConfigurations.PagingConfigurations.SortedHeaderCssClass;
                 cssClass += string.Format(" {0}", sorted);
                 if (currentDirection.ToLower().StartsWith("d"))
                 {
-                    string sortedIcondDescending = Configurations.WebConfigurations.PagingConfigurations.SortedIcondDescending;
+                    string sortedIcondDescending = WebConfigurations.PagingConfigurations.SortedIcondDescending;
                     sortIcon = sortedIcondDescending;
                     newSortDirection = direction;
                 }
                 else
                 {
-                    string sortedIcondAscending = Configurations.WebConfigurations.PagingConfigurations.SortedIcondAscending;
+                    string sortedIcondAscending = WebConfigurations.PagingConfigurations.SortedIcondAscending;
                     sortIcon = sortedIcondAscending;
                     newSortDirection = "desc";
                 }
@@ -64,17 +67,19 @@ namespace Foundation.Web.Sorter
                 newSortDirection = direction;
             }
 
-            var iconSpan = string.Format("<span class=\"glyphicon glyph{0}\"></span>", sortIcon);
+            string iconSpan = string.Format("<span class=\"glyphicon glyph{0}\"></span>", sortIcon);
 
             sortingInfo.Sort = columnId;
             sortingInfo.SortDirection = newSortDirection;
 
-            var link = BasePagingExtensions.CreatePageLink(urlActionDelegate,queryObject, title, title);
+            MvcHtmlString link = BasePagingExtensions.CreatePageLink(urlActionDelegate, queryObject, title, title);
 
             sortingInfo.Sort = currentSort;
             sortingInfo.SortDirection = currentDirection;
 
-            return MvcHtmlString.Create(string.Format("<th class=\"{0}\" id=\"{1}\" {2}>{3} {4} </th>", cssClass, columnId, properties, link, iconSpan));
+            return
+                MvcHtmlString.Create(string.Format("<th class=\"{0}\" id=\"{1}\" {2}>{3} {4} </th>", cssClass, columnId,
+                    properties, link, iconSpan));
         }
     }
 }

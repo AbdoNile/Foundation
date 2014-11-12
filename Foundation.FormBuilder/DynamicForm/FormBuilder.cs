@@ -63,6 +63,7 @@ namespace Foundation.FormBuilder.DynamicForm
                     var elementBlock = this.elementGenerator.RenderElement(formElement);
 
                     elementBlock.MergeAttributes(formElement.ValidationAttributes);
+                    elementBlock.MergeAttributes(formElement.AppendedHtmlAttributes);
 
                     sb.Append(elementBlock);
                 }

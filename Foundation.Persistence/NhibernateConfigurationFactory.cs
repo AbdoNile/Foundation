@@ -28,12 +28,10 @@ namespace Foundation.Persistence
         
         public NHibernate.Cfg.Configuration Create()
         {
+            var persistenceConfiguration =   MsSqlConfiguration.MsSql2012.ConnectionString(c => c.FromConnectionStringWithKey(this.connectionString.Name));
+
             // Configure the database properties
-            var configruation = Fluently.Configure()
-                .Database(
-                    MsSqlConfiguration.MsSql2008
-                        .ConnectionString(c => c.FromConnectionStringWithKey(this.connectionString.Name))
-                );
+            var configruation = Fluently.Configure().Database(persistenceConfiguration);
 
             // is it required to create schema ?
             if (ExportSchema)

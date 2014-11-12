@@ -1,8 +1,8 @@
 namespace Foundation.Configuration
 {
-    public interface IFoundationConfigurator 
+    public interface IFoundationConfigurator
     {
-        WebConfigurations  Web { get; set; }
+        WebConfigurations Web { get; set; }
         BusinessConfigurations Business { get; set; }
         PersistenceConfigurations Persistence { get; set; }
         MongoConfigurations Mongo { get; set; }

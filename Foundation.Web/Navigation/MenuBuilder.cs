@@ -15,10 +15,11 @@ namespace Foundation.Web.Navigation
             var stringWriter = new StringWriter(sb);
             using (var textWriter = new NavHtmlTextWritter(stringWriter))
             {
-                using (new MenuContainer(textWriter)) foreach (var menuItem in menu.Children)
-                {
-                    Render(menuItem, textWriter);
-                }
+                using (new MenuContainer(textWriter))
+                    foreach (MenuItem menuItem in menu.Children)
+                    {
+                        Render(menuItem, textWriter);
+                    }
 
                 return new MvcHtmlString(sb.ToString());
             }
@@ -35,23 +36,22 @@ namespace Foundation.Web.Navigation
             {
                 textWriter.AddAttribute(HtmlTextWriterAttribute.Class, "divider");
             }
-            
+
             if (menuItem.Active)
             {
                 textWriter.AddAttribute(HtmlTextWriterAttribute.Class, "active");
             }
 
             textWriter.RenderBeginTag(HtmlTextWriterTag.Li);
-           
+
             if (menuItem.Children != null && menuItem.Children.Any())
             {
-                RenderLeafElement(menuItem, textWriter, true); 
+                RenderLeafElement(menuItem, textWriter, true);
                 using (new MenuList(textWriter, false))
                 {
-                    foreach (var childMenuItem in menuItem.Children)
+                    foreach (MenuItem childMenuItem in menuItem.Children)
                     {
                         Render(childMenuItem, textWriter);
-                        
                     }
                 }
             }
@@ -61,24 +61,21 @@ namespace Foundation.Web.Navigation
             }
 
             textWriter.RenderEndTag();
-
         }
 
         private void RenderLeafElement(MenuItem menuItem, HtmlTextWriter textWriter, bool dropDownToggle = false)
         {
-           
-             
-                var link = new TagBuilder("a");
-                menuItem.URL = string.IsNullOrEmpty(menuItem.URL) ? "#" : "/" + menuItem.URL;
-                link.Attributes.Add("href", menuItem.URL);
-                if (dropDownToggle)
-                {
-                    link.MergeAttribute("class", "dropdown-toggle");
-                    link.MergeAttribute("data-toggle", "dropdown");
-                }
-                link.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(menuItem.HtmlAttributes));
-                link.InnerHtml = menuItem.Text;
-                textWriter.Write(link.ToString());
+            var link = new TagBuilder("a");
+            menuItem.URL = string.IsNullOrEmpty(menuItem.URL) ? "#" : "/" + menuItem.URL;
+            link.Attributes.Add("href", menuItem.URL);
+            if (dropDownToggle)
+            {
+                link.MergeAttribute("class", "dropdown-toggle");
+                link.MergeAttribute("data-toggle", "dropdown");
+            }
+            link.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(menuItem.HtmlAttributes));
+            link.InnerHtml = menuItem.Text;
+            textWriter.Write(link.ToString());
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Foundation.Web.Paging;
 
 namespace Foundation.Web.ModelBinders
@@ -12,8 +7,8 @@ namespace Foundation.Web.ModelBinders
     {
         public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            var model = base.BindModel(controllerContext, bindingContext);
-            var pagedModel = (ISortingParameters)model;
+            object model = base.BindModel(controllerContext, bindingContext);
+            var pagedModel = (ISortingParameters) model;
 
             if (pagedModel == null)
             {
@@ -24,4 +19,3 @@ namespace Foundation.Web.ModelBinders
         }
     }
 }
-

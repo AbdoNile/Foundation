@@ -20,6 +20,11 @@ namespace Foundation.FormBuilder.CustomAttribute
         
         // Element Type to render.
         public ElementType ElementType;
+
+        /// <summary>
+        /// example "JSON like . Exmaple : {attribute1 : value1, attribute2: value2}"
+        /// </summary>
+        public string HtmlAttributes;
         
         internal string GroupName;
         internal string Prompt;

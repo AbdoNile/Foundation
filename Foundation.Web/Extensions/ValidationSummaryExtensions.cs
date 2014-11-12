@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Foundation.Web.Extensions
@@ -9,14 +10,16 @@ namespace Foundation.Web.Extensions
         {
             return ValidationSummaryBootstrap(helper, true);
         }
-        
+
         /// <summary>
-        /// Returns an error alert that lists each model error, much like the standard ValidationSummary only with
-        /// altered markup for the Twitter bootstrap styles.
+        ///     Returns an error alert that lists each model error, much like the standard ValidationSummary only with
+        ///     altered markup for the Twitter bootstrap styles.
         /// </summary>
-        public static MvcHtmlString ValidationSummaryBootstrap(this HtmlHelper helper, bool closeable, string promptMessage = "Please fix the errors listed below and try again.")
+        public static MvcHtmlString ValidationSummaryBootstrap(this HtmlHelper helper, bool closeable,
+            string promptMessage = "Please fix the errors listed below and try again.")
         {
             # region Equivalent view markup
+
             // var errors = ViewData.ModelState.SelectMany(x => x.Value.Errors.Select(y => y.ErrorMessage));
             //
             // if (errors.Count() > 0)
@@ -32,9 +35,10 @@ namespace Foundation.Web.Extensions
             //         </ul>
             //     </div>
             // }
+
             # endregion
 
-            var errors = helper.ViewContext.ViewData.ModelState
+            IEnumerable<string> errors = helper.ViewContext.ViewData.ModelState
                 .SelectMany(state => state.Value.Errors.Select(error => error.ErrorMessage));
 
             int errorCount = errors.Count();
@@ -47,7 +51,7 @@ namespace Foundation.Web.Extensions
             var div = new TagBuilder("div");
             div.AddCssClass("alert");
             div.AddCssClass("fade in");
-            
+
             div.AddCssClass("alert-danger");
 
             string message = string.Empty;
@@ -72,13 +76,13 @@ namespace Foundation.Web.Extensions
                 div.InnerHtml += button.ToString();
             }
 
-            div.InnerHtml += "<strong>" + promptMessage + "</strong> <br/>" +  message;
+            div.InnerHtml += "<strong>" + promptMessage + "</strong> <br/>" + message;
 
             if (errorCount > 1)
             {
                 var ul = new TagBuilder("ul");
 
-                foreach (var error in errors)
+                foreach (string error in errors)
                 {
                     var li = new TagBuilder("li");
                     li.AddCssClass("text-error");

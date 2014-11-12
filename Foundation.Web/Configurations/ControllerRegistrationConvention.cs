@@ -10,7 +10,7 @@ namespace Foundation.Web.Configurations
     {
         public void Process(Type type, Registry registry)
         {
-            if (typeof(IController).IsAssignableFrom(type) && !type.IsAbstract)
+            if (typeof (IController).IsAssignableFrom(type) && !type.IsAbstract)
             {
                 string name = type.Name.Replace("Controller", string.Empty);
                 registry.For<IController>().Add(new ConfiguredInstance(type).Named(name));

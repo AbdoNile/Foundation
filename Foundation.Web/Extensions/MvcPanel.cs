@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web.Mvc;
 
 namespace Foundation.Web.Extensions
@@ -18,25 +19,25 @@ namespace Foundation.Web.Extensions
             this.htmlHelper = htmlHelper;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public static void EndPanel(HtmlHelper htmlHelper)
         {
-            var writer = htmlHelper.ViewContext.Writer;
+            TextWriter writer = htmlHelper.ViewContext.Writer;
 
             writer.Write("</div></div>");
         }
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
-                this.disposed = true;
-                EndPanel(this.htmlHelper);
+                disposed = true;
+                EndPanel(htmlHelper);
             }
         }
     }

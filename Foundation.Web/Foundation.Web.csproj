@@ -36,6 +36,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>D:\Projects\ContractorMate\packages\Castle.Core.3.2.2\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Foundation.Infrastructure, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Projects\ContractorMate\packages\Foundation.Infrastructure.0.33\lib\net45\Foundation.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\Projects\ContractorMate\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
@@ -46,7 +57,6 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
@@ -126,10 +136,6 @@
     <ProjectReference Include="..\Foundation.Configuration\Foundation.Configuration.csproj">
       <Project>{975ed9e8-b905-4aa3-83c3-8d6d193c785c}</Project>
       <Name>Foundation.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Foundation.Infrastructure\Foundation.Infrastructure.csproj">
-      <Project>{0735de5d-9ff2-4913-b894-f3b5d36a6ca5}</Project>
-      <Name>Foundation.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

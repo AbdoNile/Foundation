@@ -4,7 +4,7 @@ using StructureMap.Configuration.DSL;
 
 namespace Foundation.Configuration.Extensions
 {
-    public static class StructureMapExtension 
+    public static class StructureMapExtension
     {
         public static void For<T>(this Registry cfg, Type pluginType, bool singleTone = false)
         {
@@ -20,8 +20,7 @@ namespace Foundation.Configuration.Extensions
 
         private static T GetPlugin<T>(Type pluginType)
         {
-            return (T)ObjectFactory.GetInstance(pluginType);
+            return (T) ObjectFactory.GetInstance(pluginType);
         }
-
     }
 }

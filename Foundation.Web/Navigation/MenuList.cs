@@ -26,7 +26,7 @@ namespace Foundation.Web.Navigation
 
         public void Dispose()
         {
-            this.htmlTextWriter.RenderEndTag();
+            htmlTextWriter.RenderEndTag();
         }
     }
 }

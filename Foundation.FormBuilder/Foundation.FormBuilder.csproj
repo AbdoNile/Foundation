@@ -77,6 +77,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BootStrapSet\HtmlAttributes.cs" />
+    <Compile Include="CustomAttribute\AppendedHtmlAttribute.cs" />
     <Compile Include="DynamicForm\FormBuilder.cs" />
     <Compile Include="DynamicForm\IElementGenerator.cs" />
     <Compile Include="DynamicForm\IFormBuilderParameters.cs" />

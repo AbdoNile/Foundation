@@ -14,5 +14,6 @@ namespace Foundation.FormBuilder.DynamicForm
         public bool HasErrors;
         public Type MappedDataType;
         public IDictionary<string, object> ValidationAttributes;
+        public IDictionary<string, object> AppendedHtmlAttributes;
     }
 }

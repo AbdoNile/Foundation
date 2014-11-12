@@ -7,19 +7,23 @@ namespace Foundation.Web.Extensions
 {
     public class NavHtmlTextWritter : HtmlTextWriter
     {
-        private Dictionary<HtmlTextWriterAttribute, List<string>> attrValues = new Dictionary<HtmlTextWriterAttribute, List<string>>();
-        private readonly HtmlTextWriterAttribute[] multiValueAttrs = new[] { HtmlTextWriterAttribute.Class };
+        private readonly HtmlTextWriterAttribute[] multiValueAttrs = {HtmlTextWriterAttribute.Class};
 
-        public NavHtmlTextWritter(TextWriter writer) : base(writer) { }
+        private Dictionary<HtmlTextWriterAttribute, List<string>> attrValues =
+            new Dictionary<HtmlTextWriterAttribute, List<string>>();
+
+        public NavHtmlTextWritter(TextWriter writer) : base(writer)
+        {
+        }
 
         public override void AddAttribute(HtmlTextWriterAttribute key, string value)
         {
             if (multiValueAttrs != null && multiValueAttrs.Contains(key))
             {
-                if (!this.attrValues.ContainsKey(key))
-                    this.attrValues.Add(key, new List<string>());
+                if (!attrValues.ContainsKey(key))
+                    attrValues.Add(key, new List<string>());
 
-                this.attrValues[key].Add(value);
+                attrValues[key].Add(value);
             }
             else
             {
@@ -29,29 +33,29 @@ namespace Foundation.Web.Extensions
 
         public override void RenderBeginTag(HtmlTextWriterTag tagKey)
         {
-            this.AddMultiValuesAttrs();
+            AddMultiValuesAttrs();
             base.RenderBeginTag(tagKey);
-            this.ClearAttributes();
+            ClearAttributes();
         }
 
         public override void RenderBeginTag(string tagName)
         {
-            this.AddMultiValuesAttrs();
+            AddMultiValuesAttrs();
             base.RenderBeginTag(tagName);
-            this.ClearAttributes();
+            ClearAttributes();
         }
 
         private void AddMultiValuesAttrs()
         {
-            foreach (var key in this.attrValues.Keys)
-                this.AddAttribute(key.ToString(), string.Join(" ", this.attrValues[key].ToArray()));
+            foreach (HtmlTextWriterAttribute key in attrValues.Keys)
+                AddAttribute(key.ToString(), string.Join(" ", attrValues[key].ToArray()));
 
-            this.attrValues = new Dictionary<HtmlTextWriterAttribute, List<string>>();
+            attrValues = new Dictionary<HtmlTextWriterAttribute, List<string>>();
         }
 
         public void ClearAttributes()
         {
-            this.attrValues.Clear();
+            attrValues.Clear();
         }
     }
 }

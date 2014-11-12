@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using NHibernate;
 using NHibernate.Linq;
 
 namespace Foundation.Web.Paging
@@ -12,7 +13,7 @@ namespace Foundation.Web.Paging
         {
             get
             {
-                var configuredPageSize = ConfigurationManager.AppSettings["Foundation_PageSize"];
+                string configuredPageSize = ConfigurationManager.AppSettings["Foundation_PageSize"];
                 return string.IsNullOrEmpty(configuredPageSize) ? 10 : Convert.ToInt32(configuredPageSize);
             }
         }
@@ -29,7 +30,7 @@ namespace Foundation.Web.Paging
                 pageIndex = 1;
             }
 
-            return source.Skip(pageIndex * pageSize)
+            return source.Skip(pageIndex*pageSize)
                 .Take(pageSize);
         }
 
@@ -44,12 +45,12 @@ namespace Foundation.Web.Paging
             {
                 pageIndex = 1;
             }
-            
-            var futureCount = query.ToFutureValue(x => x.Count());
 
-            var queryPaged = query.Skip((pageIndex - 1)*pageSize).Take(pageSize).ToFuture();
+            IFutureValue<int> futureCount = query.ToFutureValue(x => x.Count());
 
-            return new PagedList<T>(queryPaged,(pageIndex - 1), pageSize, x => futureCount.Value);
+            IEnumerable<T> queryPaged = query.Skip((pageIndex - 1)*pageSize).Take(pageSize).ToFuture();
+
+            return new PagedList<T>(queryPaged, (pageIndex - 1), pageSize, x => futureCount.Value);
         }
 
         public static IPagedList<T> FetchPaged<T>(this IQueryable<T> query, IPagingParameters pagingParameters)
@@ -58,28 +59,27 @@ namespace Foundation.Web.Paging
             {
                 return query.FetchPaged(pagingParameters.PageNumber, pagingParameters.PageSize);
             }
-            else
-            {
-                return query.FetchPaged(new PagingParameters());
-            }
+            return query.FetchPaged(new PagingParameters());
         }
 
-        private static IPagedList<T> FetchPaged<T>(this IQueryable<T> parentQuery, IQueryable<T> queryWithChildren, int pageIndex, int pageSize)
+        private static IPagedList<T> FetchPaged<T>(this IQueryable<T> parentQuery, IQueryable<T> queryWithChildren,
+            int pageIndex, int pageSize)
         {
             if (pageSize == 0)
             {
                 pageSize = PageSize;
             }
-            
-            var futureCount = parentQuery.Count();
+
+            int futureCount = parentQuery.Count();
             return new PagedList<T>(
-                queryWithChildren.Skip((pageIndex - 1) * pageSize).Take(pageSize),
+                queryWithChildren.Skip((pageIndex - 1)*pageSize).Take(pageSize),
                 (pageIndex - 1),
                 pageSize,
                 x => futureCount);
         }
 
-        private static IPagedList<T> FetchPaged<T>(this IQueryable<T> query, IQueryable<T> queryWithChildren, IQueryable<T> childrenQueryWithGrandchildren, int pageIndex, int pageSize)
+        private static IPagedList<T> FetchPaged<T>(this IQueryable<T> query, IQueryable<T> queryWithChildren,
+            IQueryable<T> childrenQueryWithGrandchildren, int pageIndex, int pageSize)
         {
             if (pageSize == 0)
             {
@@ -91,12 +91,12 @@ namespace Foundation.Web.Paging
                 pageIndex = 1;
             }
 
-            var futureCount = query.ToFutureValue(x => x.Count());
+            IFutureValue<int> futureCount = query.ToFutureValue(x => x.Count());
 
-            var values1 = queryWithChildren.ToFuture();
+            IEnumerable<T> values1 = queryWithChildren.ToFuture();
             childrenQueryWithGrandchildren.ToFuture();
 
-            var allValues = values1.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+            IEnumerable<T> allValues = values1.Skip((pageIndex - 1)*pageSize).Take(pageSize);
 
             return new PagedList<T>(
                 allValues,

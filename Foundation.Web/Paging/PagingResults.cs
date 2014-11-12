@@ -3,14 +3,15 @@
 namespace Foundation.Web.Paging
 {
     /// <summary>
-    /// Container of the paging information as returned from FetchPaged Method. 
+    ///     Container of the paging information as returned from FetchPaged Method.
     /// </summary>
-    public class PagingResults : IPagingResults 
+    public class PagingResults : IPagingResults
     {
         private readonly int pageNumber;
 
-        public PagingResults(int totalItems, int totalPages, int showingFrom, int showingTo, int pageSize,int pageNumber, string sort = null,
-            string sortDirection = null,  Func<object, string> actiFunc = null)
+        public PagingResults(int totalItems, int totalPages, int showingFrom, int showingTo, int pageSize,
+            int pageNumber, string sort = null,
+            string sortDirection = null, Func<object, string> actiFunc = null)
         {
             this.pageNumber = pageNumber;
             TotalItems = totalItems;
@@ -23,6 +24,11 @@ namespace Foundation.Web.Paging
             ActiFunc = actiFunc;
         }
 
+        public string Sort { get; private set; }
+
+        public string SortDirection { get; private set; }
+        public Func<object, string> ActiFunc { get; set; }
+
         public int TotalItems { get; private set; }
 
         public int TotalPages { get; private set; }
@@ -32,11 +38,6 @@ namespace Foundation.Web.Paging
         public int ShowingTo { get; private set; }
 
         public int PageSize { get; private set; }
-
-        public string Sort { get; private set; }
-
-        public string SortDirection { get; private set; }
-        public Func<object, string> ActiFunc { get; set; }
 
         public int PageNumber { get; private set; }
 

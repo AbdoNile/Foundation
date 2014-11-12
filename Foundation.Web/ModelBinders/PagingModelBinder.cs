@@ -7,8 +7,8 @@ namespace Foundation.Web.ModelBinders
     {
         public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            var model = base.BindModel(controllerContext, bindingContext);
-            var pagedModel = (IPagingParameters)model;
+            object model = base.BindModel(controllerContext, bindingContext);
+            var pagedModel = (IPagingParameters) model;
 
             if (pagedModel == null)
             {
