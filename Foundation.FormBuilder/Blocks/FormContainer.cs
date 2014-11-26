@@ -25,9 +25,9 @@ namespace Foundation.FormBuilder.Blocks
             this.textWriter = htmlTextWriter;
             this.formType = formType;
 
-            textWriter.AddAttribute("method", method.ToString());
+           // textWriter.AddAttribute("method", method.ToString());
 
-            textWriter.AddAttribute("action", url ) ;
+            //textWriter.AddAttribute("action", url ) ;
             var htmlAttributesCollection = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
 
             switch (this.formType)

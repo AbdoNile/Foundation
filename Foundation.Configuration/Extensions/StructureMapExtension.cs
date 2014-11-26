@@ -18,7 +18,12 @@ namespace Foundation.Configuration.Extensions
             }
         }
 
-        private static T GetPlugin<T>(Type pluginType)
+        public static void HttpScopedFor<T>(this Registry cfg, Type pluginType)
+        {
+                cfg.For<T>().HybridHttpOrThreadLocalScoped().Use(GetPlugin<T>(pluginType));
+        }
+
+        public static T GetPlugin<T>(Type pluginType)
         {
             return (T) ObjectFactory.GetInstance(pluginType);
         }

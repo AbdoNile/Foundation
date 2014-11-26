@@ -14,11 +14,13 @@ namespace Foundation.Web
     {
         private readonly Dictionary<FlashMessageType, Queue<string>> messages;
         private readonly ResourceManager resourceManager;
+        private readonly Guid uniqueGuid;
 
         public WebFlashMessenger(IResourcesLocator resourcesLocator)
         {
             resourceManager = resourcesLocator.FlashMessagesResourceManager;
 
+            uniqueGuid = Guid.NewGuid();
             messages = new Dictionary<FlashMessageType, Queue<string>>();
 
             foreach (FlashMessageType flashMessageType in Enum.GetValues(typeof (FlashMessageType)))

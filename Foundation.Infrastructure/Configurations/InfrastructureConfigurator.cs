@@ -1,3 +1,4 @@
+using System;
 using Foundation.Configuration;
 using Foundation.Configuration.Extensions;
 using Foundation.Infrastructure.BL;
@@ -34,7 +35,8 @@ namespace Foundation.Infrastructure.Configurations
 
             if (foundationConfigurator.Web.FlashMessenger != null)
             {
-                cfg.For<IFlashMessenger>(foundationConfigurator.Web.FlashMessenger);
+                cfg.For<IFlashMessenger>().Use(context => 
+                  context.GetInstance(foundationConfigurator.Web.FlashMessenger) as IFlashMessenger);
             }
 
             cfg.AddRegistry(new SecurityRegistery());

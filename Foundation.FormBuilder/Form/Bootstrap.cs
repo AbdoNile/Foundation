@@ -38,10 +38,15 @@ namespace Foundation.FormBuilder.Form
             return fc;
         }
 
-        public FormContainer BeginForm(BootstrapFormType formType, object htmlAttributes)
+        public FormContainer BeginForm(BootstrapFormType formType, object htmlAttributes, bool nonActionForm = false)
         {
             var rawUrl = this.helper.ViewContext.HttpContext.Request.RawUrl;
             var textWriter = new HtmlTextWriter(helper.ViewContext.Writer);
+            if (nonActionForm)
+            {
+                rawUrl = "";
+            }
+
             var fc = new FormContainer(textWriter, rawUrl, method: FormMethod.Post, htmlAttributes: htmlAttributes);
             return fc;
         }
