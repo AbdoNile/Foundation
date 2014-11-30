@@ -12,7 +12,7 @@ namespace Foundation.Web
 {
     public class WebFlashMessenger : IFlashMessenger
     {
-        private readonly Dictionary<FlashMessageType, Queue<string>> messages;
+        protected readonly Dictionary<FlashMessageType, Queue<string>> messages;
         private readonly ResourceManager resourceManager;
         private readonly Guid uniqueGuid;
 
@@ -48,7 +48,7 @@ namespace Foundation.Web
             messages[messageType].Enqueue(message);
         }
 
-        public string RenderFlashMessages()
+        public virtual string RenderFlashMessages()
         {
             var sb = new StringBuilder();
 
@@ -68,7 +68,7 @@ namespace Foundation.Web
             return sb.ToString();
         }
 
-        public string RenderFlashMessagesForType(FlashMessageType messageType)
+        public virtual string RenderFlashMessagesForType(FlashMessageType messageType)
         {
             IEnumerable<string> messagesToRender = GetMessagesForType(messageType);
 

@@ -8,7 +8,8 @@ namespace Foundation.Infrastructure.BL
     {
         private readonly ISession session;
 
-        public TransactionInterceptor(IBusinessManagerInvocationLogger businessManagerInvocationLogger, ISession session) : base(businessManagerInvocationLogger, session)
+        public TransactionInterceptor(IBusinessManagerInvocationLogger businessManagerInvocationLogger, ISession session) 
+            : base(businessManagerInvocationLogger, session)
         {
             this.session = session;
         }
